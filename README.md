@@ -5,8 +5,12 @@
 
 This repo will be complemented in one week.
 
+## Results and Models
 
-## Install
+
+## Usage
+
+### Install
 
 - PyTorch (1.7.0)
 - torchvision (0.8.1)
@@ -16,7 +20,7 @@ This repo will be complemented in one week.
 - mmdetection (v2.11)
 - mmsegmentation (v0.11)
 
-## Data preparation
+### Data preparation
 
 Download and extract ImageNet train and val images from http://image-net.org/.
 The directory structure is:
@@ -37,10 +41,10 @@ The directory structure is:
 │  ├── ......
 ```
 
-## Evaluation
+### Training
 
+### Evaluation
 
-## Training
 
 
 ## Acknowledgement
