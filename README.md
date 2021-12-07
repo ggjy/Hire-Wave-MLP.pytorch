@@ -3,9 +3,19 @@
 
 ## Implementation of [Hire-MLP: Vision MLP via Hierarchical Rearrangement](https://arxiv.org/pdf/2108.13341.pdf) and [An Image Patch is a Wave: Phase-Aware Vision MLP](https://arxiv.org/pdf/2111.12294.pdf)
 
-This repo will be complemented in one week.
+This detection and segmentation repo will be complemented ASAP.
 
 ## Results and Models
+
+### Hire-MLP on ImageNet-1K Classification
+
+| Model                | Parameters | FLOPs    | Top 1 Acc. | Log | Ckpt |
+| :------------------- | :--------: | :------: | :--------: | :------: | :------: |
+| Hire-MLP-Tiny        | 18M        |  2.1G    |  79.7%     | | |
+| Hire-MLP-Small       | 33M        |  4.2G    |  82.1%     | | |
+| Hire-MLP-Base        | 58M        |  8.1G    |  83.2%     | | |
+| Hire-MLP-Large       | 96M        |  13.4G   |  83.8%     | | |
+
 
 
 ## Usage
