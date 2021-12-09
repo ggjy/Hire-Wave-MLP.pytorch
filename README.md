@@ -11,9 +11,10 @@ This detection and segmentation repo will be complemented ASAP.
 
 | Model                | Parameters | FLOPs    | Top 1 Acc. | Log | Ckpt |
 | :------------------- | :--------: | :------: | :--------: | :------: | :------: |
-| Hire-MLP-Tiny        | 18M        |  2.1G    |  79.7%     | [github](https://github.com/ggjy/Hire-Wave-MLP.pytorch/releases/download/log/hire-mlp-tiny-log.txt) | [github](https://https://github.com/ggjy/Hire-Wave-MLP.pytorch/releases/download/log/hire_mlp_tiny.pth) |
-| Hire-MLP-Small       | 33M        |  4.2G    |  82.1%     | [github](https://github.com/ggjy/Hire-Wave-MLP.pytorch/releases/download/log/hire-mlp-small-log.txt) | [github](https://https://github.com/ggjy/Hire-Wave-MLP.pytorch/releases/download/log/hire_mlp_small.pth) |
-| Hire-MLP-Base        | 58M        |  8.1G    |  83.2%     | [github](https://github.com/ggjy/Hire-Wave-MLP.pytorch/releases/download/log/hire-mlp-base-log.txt) | [github](https://https://github.com/ggjy/Hire-Wave-MLP.pytorch/releases/download/log/hire_mlp_base.pth) |
+| Hire-MLP-Tiny        | 18M        |  2.1G    |  79.7%     | [github](https://github.com/ggjy/Hire-Wave-MLP.pytorch/releases/download/log/hire-mlp-tiny-log.txt) | [github](https://github.com/ggjy/Hire-Wave-MLP.pytorch/releases/download/log/hire_mlp_tiny.pth) |
+
+| Hire-MLP-Small       | 33M        |  4.2G    |  82.1%     | [github](https://github.com/ggjy/Hire-Wave-MLP.pytorch/releases/download/log/hire-mlp-small-log.txt) | [github](https://github.com/ggjy/Hire-Wave-MLP.pytorch/releases/download/log/hire_mlp_small.pth) |
+| Hire-MLP-Base        | 58M        |  8.1G    |  83.2%     | [github](https://github.com/ggjy/Hire-Wave-MLP.pytorch/releases/download/log/hire-mlp-base-log.txt) | [github](https://github.com/ggjy/Hire-Wave-MLP.pytorch/releases/download/log/hire_mlp_base.pth) |
 | Hire-MLP-Large       | 96M        |  13.4G   |  83.8%     | | |
 
 
