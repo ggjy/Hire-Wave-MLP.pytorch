@@ -3,7 +3,6 @@
 
 ## Implementation of [Hire-MLP: Vision MLP via Hierarchical Rearrangement](https://arxiv.org/pdf/2108.13341.pdf) and [An Image Patch is a Wave: Phase-Aware Vision MLP](https://arxiv.org/pdf/2111.12294.pdf)
 
-This detection and segmentation repo will be complemented ASAP.
 
 ## Results and Models
 
