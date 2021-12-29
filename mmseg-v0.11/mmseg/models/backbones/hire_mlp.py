@@ -288,7 +288,6 @@ class HireMLPNet(nn.Module):
         outs = []
         for idx, block in enumerate(self.network):
             x = block(x)
-            # added by jianyuan.guo
             if idx in self.out_indices:
                 if self.extra_norm:
                     norm_layer = getattr(self, f'norm{idx}')
