@@ -52,6 +52,8 @@ The directory structure is:
 
 ### Training
 
+#### Training Hire-MLP
+
 To train Hire-MLP-Tiny on ImageNet-1K on a single node with 8 gpus:
 
 ```python -m torch.distributed.launch --nproc_per_node=8 train.py --data-path /your_path_to/imagenet/ --output_dir /your_path_to/output/ --model hire_mlp_tiny --batch-size 256 --apex-amp --input-size 224 --drop-path 0.0 --epochs 300 --test_freq 50 --test_epoch 260 --warmup-epochs 20 --warmup-lr 1e-6  --no-model-ema```
@@ -59,6 +61,26 @@ To train Hire-MLP-Tiny on ImageNet-1K on a single node with 8 gpus:
 To train Hire-MLP-Base on ImageNet-1K on a single node with 8 gpus:
 
 ```python -m torch.distributed.launch --nproc_per_node=8 train.py --data-path /your_path_to/imagenet/ --output_dir /your_path_to/output/ --model hire_mlp_base --batch-size 128 --apex-amp --input-size 224 --drop-path 0.2 --epochs 300 --test_freq 50 --test_epoch 260 --warmup-epochs 20 --warmup-lr 1e-6  --no-model-ema```
+
+#### Training Wave-MLP
+
+On a single node with 8 gpus, you can train the Wave-MLP family on ImageNet-1K as follows :
+
+WaveMLP_T_dw:
+
+``` python -m torch.distributed.launch --nproc_per_node 8 --nnodes=1 --node_rank=0 train_wave.py /your_path_to/imagenet/ --output /your_path_to/output/  --model WaveMLP_T_dw --sched cosine --epochs 300 --opt adamw -j 8 --warmup-lr 1e-6 --mixup .8 --cutmix 1.0 --model-ema --model-ema-decay 0.99996 --aa rand-m9-mstd0.5-inc1 --color-jitter 0.4 --warmup-epochs 5 --opt-eps 1e-8 --repeated-aug --remode pixel --reprob 0.25 --amp --lr 1e-3 --weight-decay .05 --drop 0 --drop-path 0.1 -b 128```
+
+WaveMLP_T:
+
+```python -m torch.distributed.launch --nproc_per_node 8 --nnodes=1 --node_rank=0 train_wave.py /your_path_to/imagenet/ --output /your_path_to/output/  --model WaveMLP_T --sched cosine --epochs 300 --opt adamw -j 8 --warmup-lr 1e-6 --mixup .8 --cutmix 1.0 --model-ema --model-ema-decay 0.99996 --aa rand-m9-mstd0.5-inc1 --color-jitter 0.4 --warmup-epochs 5 --opt-eps 1e-8 --repeated-aug --remode pixel --reprob 0.25 --amp --lr 1e-3 --weight-decay .05 --drop 0 --drop-path 0.1 -b 128```
+
+WaveMLP_S:
+
+```python -m torch.distributed.launch --nproc_per_node 8 --nnodes=1 --node_rank=0 train_wave.py /your_path_to/imagenet/ --output /your_path_to/output/ --model WaveMLP_S --sched cosine --epochs 300 --opt adamw -j 8 --warmup-lr 1e-6 --mixup .8 --cutmix 1.0 --model-ema --model-ema-decay 0.99996 --aa rand-m9-mstd0.5-inc1 --color-jitter 0.4 --warmup-epochs 5 --opt-eps 1e-8 --repeated-aug --remode pixel --reprob 0.25 --amp --lr 1e-3 --weight-decay .05 --drop 0 --drop-path 0.1 -b 128```
+
+WaveMLP_M:
+
+```python -m torch.distributed.launch --nproc_per_node 8 --nnodes=1 --node_rank=0 train_wave.py /your_path_to/imagenet/ --output /your_path_to/output/  --model WaveMLP_M --sched cosine --epochs 300 --opt adamw -j 8 --warmup-lr 1e-6 --mixup .8 --cutmix 1.0 --model-ema --model-ema-decay 0.99996 --aa rand-m9-mstd0.5-inc1 --color-jitter 0.4 --warmup-epochs 5 --opt-eps 1e-8 --repeated-aug --remode pixel --reprob 0.25 --amp --lr 1e-3 --weight-decay .05 --drop 0 --drop-path 0.1 -b 128```
 
 ### Evaluation
 
