@@ -68,11 +68,11 @@ class PATM(nn.Module):
         self.mode=mode
         
         if mode=='fc':
-            self.theta_h_conv=nn.Sequential(nn.Conv2d(dim, dim, 1, 1,bias=True),nn.BatchNorm2d(dim))
-            self.theta_w_conv=nn.Sequential(nn.Conv2d(dim, dim, 1, 1,bias=True),nn.BatchNorm2d(dim))  
+            self.theta_h_conv=nn.Sequential(nn.Conv2d(dim, dim, 1, 1,bias=True),nn.BatchNorm2d(dim),nn.ReLU())
+            self.theta_w_conv=nn.Sequential(nn.Conv2d(dim, dim, 1, 1,bias=True),nn.BatchNorm2d(dim),nn.ReLU())  
         else:
-            self.theta_h_conv=nn.Sequential(nn.Conv2d(dim, dim, 3, stride=1, padding=1, groups=dim, bias=False),nn.BatchNorm2d(dim))
-            self.theta_w_conv=nn.Sequential(nn.Conv2d(dim, dim, 3, stride=1, padding=1, groups=dim, bias=False),nn.BatchNorm2d(dim)) 
+            self.theta_h_conv=nn.Sequential(nn.Conv2d(dim, dim, 3, stride=1, padding=1, groups=dim, bias=False),nn.BatchNorm2d(dim),nn.ReLU())
+            self.theta_w_conv=nn.Sequential(nn.Conv2d(dim, dim, 3, stride=1, padding=1, groups=dim, bias=False),nn.BatchNorm2d(dim),nn.ReLU()) 
                     
 
 
@@ -81,10 +81,17 @@ class PATM(nn.Module):
         B, C, H, W = x.shape
         theta_h=self.theta_h_conv(x)
         theta_w=self.theta_w_conv(x)
+
         x_h=self.fc_h(x)
-        x_w=self.fc_w(x)
+        x_w=self.fc_w(x)      
         x_h=torch.cat([x_h*torch.cos(theta_h),x_h*torch.sin(theta_h)],dim=1)
         x_w=torch.cat([x_w*torch.cos(theta_w),x_w*torch.sin(theta_w)],dim=1)
+
+#         x_1=self.fc_h(x)
+#         x_2=self.fc_w(x)
+#         x_h=torch.cat([x_1*torch.cos(theta_h),x_2*torch.sin(theta_h)],dim=1)
+#         x_w=torch.cat([x_1*torch.cos(theta_w),x_2*torch.sin(theta_w)],dim=1)
+        
         h = self.tfc_h(x_h)
         w = self.tfc_w(x_w)
         c = self.fc_c(x)
@@ -114,15 +121,15 @@ class WaveBlock(nn.Module):
 
 
 class PatchEmbedOverlapping(nn.Module):
-    def __init__(self, patch_size=16, stride=16, padding=0, in_chans=3, embed_dim=768, norm_layer=nn.BatchNorm2d, groups=1):
+    def __init__(self, patch_size=16, stride=16, padding=0, in_chans=3, embed_dim=768, norm_layer=nn.BatchNorm2d, groups=1,use_norm=True):
         super().__init__()
         patch_size = to_2tuple(patch_size)
         stride = to_2tuple(stride)
         padding = to_2tuple(padding)
         self.patch_size = patch_size
 
-        self.proj = nn.Conv2d(in_chans, embed_dim, kernel_size=patch_size, stride=stride, padding=padding, groups=groups)
-        self.norm = norm_layer(embed_dim) if norm_layer==nn.BatchNorm2d else nn.Identity()
+        self.proj = nn.Conv2d(in_chans, embed_dim, kernel_size=patch_size, stride=stride, padding=padding, groups=groups)      
+        self.norm = norm_layer(embed_dim) if use_norm==True else nn.Identity()
 
     def forward(self, x):
         x = self.proj(x)
@@ -131,11 +138,11 @@ class PatchEmbedOverlapping(nn.Module):
 
 
 class Downsample(nn.Module):
-    def __init__(self, in_embed_dim, out_embed_dim, patch_size,norm_layer=nn.BatchNorm2d):
+    def __init__(self, in_embed_dim, out_embed_dim, patch_size,norm_layer=nn.BatchNorm2d,use_norm=True):
         super().__init__()
         assert patch_size == 2, patch_size
         self.proj = nn.Conv2d(in_embed_dim, out_embed_dim, kernel_size=(3, 3), stride=(2, 2), padding=1)
-        self.norm = norm_layer(out_embed_dim) if norm_layer==nn.BatchNorm2d else nn.Identity()
+        self.norm = norm_layer(out_embed_dim) if use_norm==True else nn.Identity()
     def forward(self, x):
         x = self.proj(x) 
         x = self.norm(x)
@@ -156,7 +163,7 @@ class WaveNet(nn.Module):
     def __init__(self, layers, img_size=224, patch_size=4, in_chans=3, num_classes=1000,
         embed_dims=None, transitions=None, mlp_ratios=None, 
         qkv_bias=False, qk_scale=None, drop_rate=0., attn_drop_rate=0., drop_path_rate=0.,
-        norm_layer=nn.BatchNorm2d, fork_feat=False,mode='fc'): 
+        norm_layer=nn.BatchNorm2d, fork_feat=False,mode='fc',ds_use_norm=True,args=None): 
 
         super().__init__()
         
@@ -164,7 +171,7 @@ class WaveNet(nn.Module):
             self.num_classes = num_classes
         self.fork_feat = fork_feat
 
-        self.patch_embed = PatchEmbedOverlapping(patch_size=7, stride=4, padding=2, in_chans=3, embed_dim=embed_dims[0],norm_layer=norm_layer)
+        self.patch_embed = PatchEmbedOverlapping(patch_size=7, stride=4, padding=2, in_chans=3, embed_dim=embed_dims[0],norm_layer=norm_layer,use_norm=ds_use_norm)
 
         network = []
         for i in range(len(layers)):
@@ -176,7 +183,7 @@ class WaveNet(nn.Module):
                 break
             if transitions[i] or embed_dims[i] != embed_dims[i+1]:
                 patch_size = 2 if transitions[i] else 1
-                network.append(Downsample(embed_dims[i], embed_dims[i+1], patch_size,norm_layer=norm_layer))
+                network.append(Downsample(embed_dims[i], embed_dims[i+1], patch_size,norm_layer=norm_layer,use_norm=ds_use_norm))
 
         self.network = nn.ModuleList(network)
 
@@ -185,9 +192,6 @@ class WaveNet(nn.Module):
             self.out_indices = [0, 2, 4, 6]
             for i_emb, i_layer in enumerate(self.out_indices):
                 if i_emb == 0 and os.environ.get('FORK_LAST3', None):
-                    """For RetinaNet, `start_level=1`. The first norm layer will not used.
-                    cmd: `FORK_LAST3=1 python -m torch.distributed.launch ...`
-                    """
                     layer = nn.Identity()
                 else:
                     layer = norm_layer(embed_dims[i_emb])
@@ -207,7 +211,7 @@ class WaveNet(nn.Module):
             nn.init.constant_(m.bias, 0)
             nn.init.constant_(m.weight, 1.0)
 
-    def init_weights(self, pretrained=None): ####用于检测
+    def init_weights(self, pretrained=None): 
         """ mmseg or mmdet `init_weight` """
         if isinstance(pretrained, str):
             logger = get_root_logger()
@@ -288,7 +292,7 @@ def WaveMLP_M(pretrained=False, **kwargs):
     mlp_ratios = [8, 8, 4, 4]
     embed_dims = [64, 128, 320, 512]
     model = WaveNet(layers, embed_dims=embed_dims, patch_size=7, transitions=transitions,
-                     mlp_ratios=mlp_ratios,norm_layer=MyNorm, **kwargs)
+                     mlp_ratios=mlp_ratios,norm_layer=MyNorm,ds_use_norm=False, **kwargs)
     model.default_cfg = default_cfgs['wave_M']
     return model
 
@@ -299,6 +303,6 @@ def WaveMLP_B(pretrained=False, **kwargs):
     mlp_ratios = [4, 4, 4, 4]
     embed_dims = [96, 192, 384, 768]
     model = WaveNet(layers, embed_dims=embed_dims, patch_size=7, transitions=transitions,
-                     mlp_ratios=mlp_ratios,norm_layer=MyNorm, **kwargs)
+                     mlp_ratios=mlp_ratios,norm_layer=MyNorm,ds_use_norm=False, **kwargs)
     model.default_cfg = default_cfgs['wave_B']
     return model
