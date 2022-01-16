@@ -16,6 +16,14 @@
 | Hire-MLP-Large       | 96M        |  13.4G   |  83.8%     | | |
 
 
+### Wave-MLP on ImageNet-1K Classification
+
+| Model       | Parameters | FLOPs | Top 1 Acc. |                             Log                              |                             Ckpt                             |
+| :---------- | :--------: | :---: | :--------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+| Wave-MLP-T* |    15M     | 2.1G  |   80.1%    | [github](https://github.com/ggjy/Hire-Wave-MLP.pytorch/releases/download/log-wave/WaveMLP_T_dw.log) |  |
+| Wave-MLP-T  |    17M     | 2.4G  |   80.9%    | [github](https://github.com/ggjy/Hire-Wave-MLP.pytorch/releases/download/log-wave/WaveMLP_T.log) |  |
+| Wave-MLP-S  |    30M     | 4.5G  |   82.9%    | [github](https://github.com/ggjy/Hire-Wave-MLP.pytorch/releases/download/log-wave/WaveMLP_S.log) |  |
+| Wave-MLP-M  |    44M     | 7.9G  |   83.3%    | [github](https://github.com/ggjy/Hire-Wave-MLP.pytorch/releases/download/log-wave/WaveMLP_M.log) |  |
 
 ## Usage
 
